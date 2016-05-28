@@ -1,0 +1,22 @@
+{
+  "name": "pixelBot",
+  "version": "1.0.0",
+  "description": "Server for running the API and the static webpage",
+  "main": "server.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://gelicia@github.com/gelicia/pixelBot.git"
+  },
+  "author": "Kristina kdurivage@gelicia.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gelicia/pixelBot/issues"
+  },
+  "homepage": "https://github.com/gelicia/pixelBot",
+  "dependencies": {
+    "express": "^4.13.4",
+    "restler": "^3.4.0",
+    "serve-static": "^1.10.2"
+  }
+}

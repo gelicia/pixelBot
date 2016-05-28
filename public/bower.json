@@ -1,0 +1,24 @@
+{
+  "name": "pixelBot",
+  "homepage": "https://github.com/gelicia/pixelBot",
+  "authors": [
+    "Kristina <kdurivage@gelicia.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6",
+    "mjolnic-bootstrap-colorpicker": "bootstrap-colorpicker#~2.3.3",
+    "d3": "~3.5.17"
+  }
+}

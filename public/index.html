@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pixelbot</title>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+     <script type="text/javascript" src="bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css">
+
+     <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  </head>
+  <body onload="init()">
+    <div class="container">
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">PixelBot</a>
+          </div>
+        </div>
+      </nav>
+      <div class="row">
+        <div class="col-md-12">
+          <p>Select a color, click a pixel. Be patient waiting for updates!</p>
+        </div>
+        <div class="col-md-6">
+          <div id="ledArray"></div>
+        </div>
+        <div class="col-md-6">
+          <div id="cp7" class="inl-bl colorpicker-element"></div>
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>
