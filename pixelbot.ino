@@ -3,27 +3,38 @@
 FASTLED_USING_NAMESPACE;
 
 #define PIXEL_TYPE WS2812B
-
-#define NUM_LEDS 24
 #define DATA_PIN D3
 
-CRGB leds[NUM_LEDS];
+const int LEDsH = 4; // edit with your dimensions
+const int LEDsW = 6;
 
-int LEDsH = 4;
-int LEDsW = 6;
+const int NUM_LEDs = LEDsH * LEDsW;
+
+char ledDimensions[15];
+
+CRGB leds[NUM_LEDs];
 
 void setup()
 {
   Serial.begin(9600);
   
-  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
+  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDs);
   set_max_power_in_volts_and_milliamps(5,1000); 
-    
-  int ledDimensions = [LEDsH, LEDsW];
+  
+  //prepare the ledDimensions data
+  char temp[4];
+  itoa(LEDsH,temp,10);
+  strcat(ledDimensions,temp);
+  strcat(ledDimensions,",");
+  itoa(LEDsW,temp,10);
+  strcat(ledDimensions,temp);
+
+    //sprintf (ledDimensions, "%d,%d", LEDsW, LEDsH);
 
   Particle.function("setPixel", setPixel);
   Particle.function("setAll", setAll);
-  Particle.variable("ledDimensions");
+  Particle.variable("ledDim", ledDimensions, STRING);
+  Particle.variable("ledArr", leds);
 }
 
 void loop() {
@@ -60,7 +71,7 @@ int setAll(String command){
     int pixB = command.substring(pixGIdx+1, pixBIdx).toInt();
     
     
-    for(int i=0; i<NUM_LEDS; i++) {
+    for(int i=0; i<NUM_LEDs; i++) {
         leds[i].setRGB(pixR, pixG, pixB);
     }
     FastLED.show();

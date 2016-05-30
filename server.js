@@ -24,26 +24,29 @@ app.post('/setPixel', function (req, res) {
 });
 
 app.get('/getLEDArrDimensions', function (req, res) {
-	rest.get('https://api.spark.io/v1/devices/' + particleInfo.deviceID + '/ledDimensions', {
+	rest.get('https://api.spark.io/v1/devices/' + particleInfo.deviceID + '/ledDim', {
 			data: { 'access_token': particleInfo.accessToken }
 	}).on('complete', function(data, response) {
 		//todo response error?? send 500
-		var output = data;
+		var output = {};
+		output.width = 0;
+		output.height = 0;
 		res.send(output);
 	});
 });
 
 app.get('/getLEDPixels', function (req, res) {
-	rest.get('https://api.spark.io/v1/devices/' + particleInfo.deviceID + '/getLEDArr', {
+	/*rest.get('https://api.spark.io/v1/devices/' + particleInfo.deviceID + '/getLEDArr', {
 			data: { 'access_token': particleInfo.accessToken }
 	}).on('complete', function(data, response) {
 		//todo response error?? send 500
 		var output = data;
 		res.send(output);
-	});
+	});*/
+	res.send([{r:255, g: 0, b: 128}]);
 });
 
-var server = app.listen(1337, function () {
+var server = app.listen(3000, function () {
   var host = server.address().address;
   var port = server.address().port;
   console.log('Pixelbot Server at http://%s:%s', host, port);
