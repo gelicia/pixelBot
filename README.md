@@ -9,8 +9,8 @@
 ## The API
 One thing to keep in mind is x,y coordinate 0,0 and index 0 maps to the bottom left corner due to where it's a good spot to drill through the monitor head to put the wire going into the LED array. If you like to put holes in things via blender, hit me up, but for me a drill is much easier ;) 
 
-### The javascript API
-`node server.js` runs the server and serves the webpage. server.js has the following API functions that it sends to particle
+### The Javascript API
+`node server.js` runs the server and serves the webpage. server.js has the following API functions that it sends to particle. This is what a webpage should communicate with and should return good, valid JSON as well as handle particle errors, invalid data, etc.  
 - `GET getLEDArrDimensions` returns an object `{width: #, height: #}`
 - `GET getLEDPixels` returns an array of objects representing each LED. The index of the array corresponds to the LED address
 - `POST setPixel` takes var pixX, pixY, pixR, pixG, pixB representing what x, y coordinate to turn what RGB value. Remember that 0,0 maps to the lower left hand corner of the array.
