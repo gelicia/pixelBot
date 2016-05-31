@@ -1,5 +1,6 @@
 var ledInfo = [];
 var rootURL;
+var arrDims = {};
 
 function init(){
     var colorpicker = $('#cp7').colorpicker({
@@ -14,22 +15,25 @@ function init(){
 
 		//get LED info
 	    $.ajax({url: rootURL + "/getLEDArrDimensions"}).then(
-	    function(ledDimensions, err) { //TODO ERRORS
+	    function(arrDimsOut, err) { //TODO ERRORS
 	    	//{width: 6, height: 4}
-	       ledInfo = d3.range(0, ledInfo.width * ledInfo.height).map(function(d){return {};});;
+	    	arrDims = arrDimsOut;
+	       var ledInfo = d3.range(arrDims.width * arrDims.height).map(function(d){
+		      var xy = getXY(d);
+		      xy.addr = d;
+		      return xy;
+		    });
 
-	       var circleData = {radius : 5, spacing: 3};
+	       var circleData = {r : 10, spacing: 10};
 
 	       var svg = d3.select("#ledArray").append("svg");
-	       var ledGrp = svg.append("g");
-
-	       var circleData = {radius: 5, spacing: 5};
+	       var ledGrp = svg.append("g").attr("transform", "scale(1,-1) translate(0,-" + (((circleData.r*2)+circleData.spacing)*arrDims.height) + ")");
 
 	       ledGrp.selectAll("circle").data(ledInfo).enter().append("circle")
 	       .attr({
-		       	cx: function(d, i){return (Math.floor(i%ledDimensions.height) * 10) + 5;},
-		       	cy: function(d, i){return (i * 10) + 5;},
-		       	r: circleData.radius,
+      			cx: function(d){return d.x * (((ledProps.r*2)+ledProps.spacing))+ledProps.spacing;},
+      			cy: function(d){return d.y * (((ledProps.r*2)+ledProps.spacing))+ledProps.spacing;},
+		       	r: circleData.r,
 		       	"stroke-width": 1,
       			"stroke": "#000",
 		       	"fill": "#fff",
@@ -46,6 +50,19 @@ function init(){
 
     //todo set repeating call to get LED info and set picture
 }
+
+function getXY(addr){
+      var yNum = Math.floor(addr/arrDims.width);
+      var xNum;
+      if (yNum%2 ==0){ //even row
+        xNum = addr - (yNum * arrDims.width);
+      }
+      else { //odd row
+        xNum = ((yNum+1)*arrDims.width)-(addr+1);
+      }
+      
+      return {x: xNum, y: yNum };
+    }
 
 function refreshFromDevice(){
 	$.ajax({ url: rootURL + "/getLEDPixels"}).then(
