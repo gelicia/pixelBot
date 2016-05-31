@@ -1,5 +1,9 @@
 # pixelBot
 
+Print out the pieces besides the body here http://www.thingiverse.com/thing:291926
+Print out the body http://www.thingiverse.com/thing:1589599 (Thanks again to Catlinman for his blender skills!)
+TODO: Head LED docs
+
 `npm install` in the main directory. `bower install` in /public
 
 ## Making it yours
