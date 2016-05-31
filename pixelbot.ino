@@ -11,34 +11,64 @@ const int LEDsW = 6;
 const int NUM_LEDs = LEDsH * LEDsW;
 
 char ledDimensions[15];
+char ledChar[600];
 
 CRGB leds[NUM_LEDs];
 
 void setup()
 {
-  Serial.begin(9600);
+    Serial.begin(9600);
   
-  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDs);
-  set_max_power_in_volts_and_milliamps(5,1000); 
+    FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDs);
+    set_max_power_in_volts_and_milliamps(5,1000); 
   
-  //prepare the ledDimensions data
-  char temp[4];
-  itoa(LEDsH,temp,10);
-  strcat(ledDimensions,temp);
-  strcat(ledDimensions,",");
-  itoa(LEDsW,temp,10);
-  strcat(ledDimensions,temp);
+    char temp[4];
+  
+    itoa(LEDsH,temp,10);
+    strcat(ledDimensions,temp);
+    strcat(ledDimensions,",");
+    itoa(LEDsW,temp,10);
+    strcat(ledDimensions,temp);
 
-    //sprintf (ledDimensions, "%d,%d", LEDsW, LEDsH);
+    //todo: worth it to return json? sprintf (ledDimensions, "%d,%d", LEDsW, LEDsH);
+    
+    refreshLEDChar();
 
-  Particle.function("setPixel", setPixel);
-  Particle.function("setAll", setAll);
-  Particle.variable("ledDim", ledDimensions, STRING);
-  Particle.variable("ledArr", leds);
+    Particle.function("setPixel", setPixel);
+    Particle.function("setAll", setAll);
+    Particle.variable("ledDim", ledDimensions, STRING);
+    Particle.variable("ledArr", ledChar);
 }
 
 void loop() {
     FastLED.show();
+}
+
+void refreshLEDChar(){
+    char ledCharTemp[600];
+    //{leds: [{r: 2,g:3, b:2}, {r: 2, g:3, b:2}]}
+    strcat(ledCharTemp,"{leds: [");
+    
+    for(int i=0; i<NUM_LEDs; i++) {
+        char temp[4];
+        strcat(ledCharTemp,"{r:");
+        itoa(leds[i].r,temp,10);
+        strcat(ledCharTemp,temp);
+        strcat(ledCharTemp,",g:");
+        itoa(leds[i].g,temp,10);
+        strcat(ledCharTemp,temp);
+        strcat(ledCharTemp,",b:");
+        itoa(leds[i].b,temp,10);
+        strcat(ledCharTemp,temp);
+        strcat(ledCharTemp,"}");
+        
+        if (i != NUM_LEDs-1){
+            strcat(ledCharTemp,",");
+        }
+    }
+    strcat(ledCharTemp,"]}");
+   // ledChar = ledCharTemp;
+   strncpy(ledChar, ledCharTemp, 600);
 }
 
 int setPixel(String command){
@@ -57,6 +87,7 @@ int setPixel(String command){
     Serial.println(command + " " + String(pixX) + " " + String(pixY) + " " + String(pixR) + " " + String(pixG) + " " + String(pixB));
     
     leds[getAddr(pixX, pixY)].setRGB(pixR, pixG, pixB);
+    refreshLEDChar();
     FastLED.show();
     return 1;
 }
@@ -74,6 +105,7 @@ int setAll(String command){
     for(int i=0; i<NUM_LEDs; i++) {
         leds[i].setRGB(pixR, pixG, pixB);
     }
+    refreshLEDChar();
     FastLED.show();
 }
 
