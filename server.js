@@ -1,6 +1,7 @@
 var express = require('express');
 var serveStatic = require('serve-static');
 var rest = require('restler');
+var bodyParser = require('body-parser')
 
 var particleInfo = require('./pixelBotParticle');
 
@@ -8,30 +9,44 @@ var app = express();
 
 app.use(serveStatic('public', {'index': ['index.html', 'index.htm']}));
 
-app.post('/setPixel', function (req, res) {
-	var pixelX = req.query.pixX;
-	var pixelY = req.query.pixY;
-	var pixelR = req.query.pixR;
-	var pixelG = req.query.pixG;
-	var pixelB = req.query.pixB;
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-	rest.post('https://api.spark.io/v1/devices/' + particleInfo.deviceID + '/setPixel', {
+app.post('/setPixel', urlencodedParser, function (req, res) {
+	var pixelX = req.body.pixX;
+	var pixelY = req.body.pixY;
+	var pixelR = req.body.pixR;
+	var pixelG = req.body.pixG;
+	var pixelB = req.body.pixB;
+
+	var argString =  pixelX + "," + pixelY + "," + pixelR + "," + pixelG + "," + pixelB;
+
+	rest.post('https://api.particle.io/v1/devices/' + particleInfo.deviceID + '/setPixel', {
 			data: { 'access_token': particleInfo.accessToken,
-			'args': pixelX + "," + pixelY + "," + pixelR + "," + pixelG + "," + pixelB}
+			'args': argString}
 	}).on('complete', function(data, response) {
-		res.sendStatus(200);
+		res.send(data);
 	});
 });
 
 app.get('/getLEDArrDimensions', function (req, res) {
-	rest.get('https://api.spark.io/v1/devices/' + particleInfo.deviceID + '/ledDim', {
-			data: { 'access_token': particleInfo.accessToken }
-	}).on('complete', function(data, response) {
-		//todo response error?? send 500
-		var output = {};
-		output.width = 0;
-		output.height = 0;
-		res.send(output);
+	rest.get('https://api.particle.io/v1/devices/' + particleInfo.deviceID + '/ledDim?access_token=' + particleInfo.accessToken)
+	.on('complete', function(data, response) {
+		if (data.result){
+			var commaIdx = data.result.indexOf(",");
+			var output = {};
+			output.height = data.result.substring(0, commaIdx);
+			output.width = data.result.substring(commaIdx+1);
+			res.send(output);
+		}
+		else{
+			res.send(data);
+		}
+		
+		//todo other particle errors?? 
+		
+	})
+	.on('fail', function(data, response){
+		res.send(data);
 	});
 });
 

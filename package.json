@@ -15,6 +15,7 @@
   },
   "homepage": "https://github.com/gelicia/pixelBot",
   "dependencies": {
+    "body-parser": "^1.15.1",
     "express": "^4.13.4",
     "restler": "^3.4.0",
     "serve-static": "^1.10.2"
