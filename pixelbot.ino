@@ -46,8 +46,9 @@ void loop() {
 
 void refreshLEDChar(){
     char ledCharTemp[600];
-    //{leds: [{r: 2,g:3, b:2}, {r: 2, g:3, b:2}]}
-    strcat(ledCharTemp,"{leds: [");
+    
+    //ledCharTemp[0]=' '; todo weird character prefixed if this isn't added?
+    strcat(ledCharTemp,"{leds:[");
     
     for(int i=0; i<NUM_LEDs; i++) {
         char temp[4];
@@ -67,8 +68,7 @@ void refreshLEDChar(){
         }
     }
     strcat(ledCharTemp,"]}");
-   // ledChar = ledCharTemp;
-   strncpy(ledChar, ledCharTemp, 600);
+    strncpy(ledChar, ledCharTemp, 600);
 }
 
 int setPixel(String command){
@@ -87,7 +87,7 @@ int setPixel(String command){
     Serial.println(command + " " + String(pixX) + " " + String(pixY) + " " + String(pixR) + " " + String(pixG) + " " + String(pixB));
     
     leds[getAddr(pixX, pixY)].setRGB(pixR, pixG, pixB);
-    refreshLEDChar();
+    //refreshLEDChar();
     FastLED.show();
     return 1;
 }
@@ -101,14 +101,12 @@ int setAll(String command){
     int pixG = command.substring(pixRIdx+1, pixGIdx).toInt();
     int pixB = command.substring(pixGIdx+1, pixBIdx).toInt();
     
-    
     for(int i=0; i<NUM_LEDs; i++) {
         leds[i].setRGB(pixR, pixG, pixB);
     }
-    refreshLEDChar();
+   // refreshLEDChar();
     FastLED.show();
 }
-
 
 int getAddr(uint32_t x, uint32_t y){
   return (y*LEDsW) + ( ((y&1)==0) ? x : ((LEDsW-1)-x) );
