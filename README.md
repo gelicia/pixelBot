@@ -1,5 +1,5 @@
 # pixelBot
-This is being actively worked on. I've turned off issues and am not looking for feature requests or anything until I'm done building what's necessary.
+This is being actively worked on. Not everything works yet, I wouldn't recommend going nuts on this for a week or so as I have some things that aren't working yet. I've turned off issues and am not looking for feature requests or anything until I'm done building what's necessary.
 
 ## Making it
 - Print out the pieces besides the body here http://www.thingiverse.com/thing:291926
