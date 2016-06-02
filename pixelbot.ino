@@ -46,22 +46,21 @@ void loop() {
 
 void refreshLEDChar(){
     char ledCharTemp[600];
-    
-    //ledCharTemp[0]=' '; todo weird character prefixed if this isn't added?
+    ledCharTemp[0] = '\0';
     strcat(ledCharTemp,"{leds:[");
     
     for(int i=0; i<NUM_LEDs; i++) {
         char temp[4];
-        strcat(ledCharTemp,"{r:");
+        strcat(ledCharTemp,"[");
         itoa(leds[i].r,temp,10);
         strcat(ledCharTemp,temp);
-        strcat(ledCharTemp,",g:");
+        strcat(ledCharTemp,",");
         itoa(leds[i].g,temp,10);
         strcat(ledCharTemp,temp);
-        strcat(ledCharTemp,",b:");
+        strcat(ledCharTemp,",");
         itoa(leds[i].b,temp,10);
         strcat(ledCharTemp,temp);
-        strcat(ledCharTemp,"}");
+        strcat(ledCharTemp,"]");
         
         if (i != NUM_LEDs-1){
             strcat(ledCharTemp,",");
@@ -87,7 +86,7 @@ int setPixel(String command){
     Serial.println(command + " " + String(pixX) + " " + String(pixY) + " " + String(pixR) + " " + String(pixG) + " " + String(pixB));
     
     leds[getAddr(pixX, pixY)].setRGB(pixR, pixG, pixB);
-    //refreshLEDChar();
+    refreshLEDChar();
     FastLED.show();
     return 1;
 }
@@ -101,10 +100,11 @@ int setAll(String command){
     int pixG = command.substring(pixRIdx+1, pixGIdx).toInt();
     int pixB = command.substring(pixGIdx+1, pixBIdx).toInt();
     
+    
     for(int i=0; i<NUM_LEDs; i++) {
         leds[i].setRGB(pixR, pixG, pixB);
     }
-   // refreshLEDChar();
+    refreshLEDChar();
     FastLED.show();
 }
 

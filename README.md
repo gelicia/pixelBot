@@ -17,7 +17,7 @@ One thing to keep in mind is x,y coordinate 0,0 and index 0 maps to the bottom l
 ### The Javascript API
 server.js has the following API functions that it sends to particle. This is what a webpage should communicate with and should return good, valid JSON as well as handle particle errors, invalid data, etc.  
 - `GET getLEDArrDimensions` returns an object `{width: #, height: #}`
-- `GET getLEDPixels` returns an array of objects representing each LED. The index of the array corresponds to the LED address
+- `GET getLEDPixels` returns an array of objects representing each LED. The index of the array corresponds to the LED address. The objects contain the r, g, b value for that LED.
 - `POST setPixel` takes var pixX, pixY, pixR, pixG, pixB representing what x, y coordinate to turn what RGB value. Remember that 0,0 maps to the lower left hand corner of the array.
 
 ### Exposed Particle Functions and Variables
@@ -25,4 +25,4 @@ It has several exposed functions and variables
 - `POST setPixel` takes x,y,red,blue,green and lights up that LED with that color
 - `POST setAll` takes red,blue,green and lights up all LEDs with that color
 - `GET ledDims` returns the height and width separated by a comma. I don't JSON this because it's two numbers.
-- `GET ledInfo` returns led rgb info by index. It's worth the extra memory usage to have this return JSON that's easier to parse in the API
+- `GET ledInfo` returns led rgb info by index. It's an array of arrays with 3 values, signifying the r, g, b value of the led by index.

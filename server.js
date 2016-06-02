@@ -51,14 +51,19 @@ app.get('/getLEDArrDimensions', function (req, res) {
 });
 
 app.get('/getLEDPixels', function (req, res) {
-	/*rest.get('https://api.spark.io/v1/devices/' + particleInfo.deviceID + '/getLEDArr', {
-			data: { 'access_token': particleInfo.accessToken }
-	}).on('complete', function(data, response) {
-		//todo response error?? send 500
-		var output = data;
+	rest.get('https://api.particle.io/v1/devices/' + particleInfo.deviceID + '/ledArr?access_token=' + particleInfo.accessToken)
+	.on('complete', function(data, response) {
+		var arrResult = JSON.parse(data.result);
+		var output = {};
+		output.leds = [];
+		for (var i = 0; i < arrResult.length; i++) {
+			output.leds[i] = {};
+			output.leds[i].r = arrResult[i][0];
+			output.leds[i].g = arrResult[i][1];
+			output.leds[i].b = arrResult[i][2];
+		}
 		res.send(output);
-	});*/
-	res.send([{r:255, g: 0, b: 128}]);
+	});
 });
 
 var server = app.listen(3000, function () {

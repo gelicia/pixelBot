@@ -70,9 +70,12 @@ function init(){
 	       });
 
 	       refreshFromDevice();
+
+	       setInterval(function(){
+	       	refreshFromDevice();
+	       }, 1000);
 	    });
     });
-    //todo set repeating call to get LED info and set picture
 }
 
 function getXY(addr){
@@ -91,10 +94,17 @@ function getXY(addr){
 function refreshFromDevice(){
 	$.ajax({ url: rootURL + "/getLEDPixels"}).then(
 	function(particleLEDInfo, err) { //TODO ERRORS
-    	for (var i = 0; i < ledInfo.length; i++) {
-    		ledInfo[i].r = parseInt(particleLEDInfo[i].r, 16);
-    		ledInfo[i].g = parseInt(particleLEDInfo[i].g, 16);
-    		ledInfo[i].b = parseInt(particleLEDInfo[i].b, 16);
+    	for (var i = 0; i < particleLEDInfo.leds.length; i++) {
+    		var led = d3.select("#led_"+ i);
+			var fillR = particleLEDInfo.leds[i].r.toString(16);
+    		var fillG = particleLEDInfo.leds[i].g.toString(16);
+    		var fillB = particleLEDInfo.leds[i].b.toString(16);
+
+    		fillR = fillR.length == 1 ? "0" + fillR : fillR;
+    		fillG = fillG.length == 1 ? "0" + fillG : fillG;
+    		fillB = fillB.length == 1 ? "0" + fillB : fillB;
+
+    		led.attr("fill", "#" + fillR + fillG + fillB);
     	} 
     });
 }
