@@ -11,11 +11,16 @@ function init(){
     });
 
     d3.json('config.js', function(err, config){
+		if (err ||  !config.rootURL ){ //TODO test removing config.js and fing with the contents
+    		console.log(err, config);
+    	}
     	rootURL = config.rootURL;
 
 		//get LED info
-	    $.ajax({url: rootURL + "/getLEDArrDimensions"}).then(
-	    function(arrDimsOut, err) { //TODO ERRORS
+	    $.ajax({url: rootURL + "/getLEDArrDimensions"}).fail(function(errorInfo) { 
+ 			changeStatus('alert', errorInfo.status, errorInfo.statusText);
+ 		}).then( function(arrDimsOut) { 
+			changeStatus();
 			arrDims = arrDimsOut;
 			var ledInfo = d3.range(arrDims.width * arrDims.height).map(function(d){
 				var xy = getXY(d);
@@ -63,9 +68,11 @@ function init(){
 						pixG:color.g,
 						pixB:color.b
 					}
-					//error: function(){$('#error').text("Error connecting to server");}
-				}).then(function(d,err){ //TODO error
-					$("#led_"+clkLED.addr).attr("fill", color.hex);
+				}).fail(function(errorInfo) { 
+		 			changeStatus('alert', errorInfo.status, errorInfo.statusText);
+		 		}).then(function(d,err){ 
+		 			changeStatus();
+					led.attr("fill", color.hex);
 				});
 	       });
 
@@ -92,8 +99,10 @@ function getXY(addr){
 }
 
 function refreshFromDevice(){
-	$.ajax({ url: rootURL + "/getLEDPixels"}).then(
-	function(particleLEDInfo, err) { //TODO ERRORS
+	$.ajax({ url: rootURL + "/getLEDPixels"}).fail(function(errorInfo) { 
+		changeStatus('alert', errorInfo.status, errorInfo.statusText);
+	}).then(function(particleLEDInfo, err) { 
+		changeStatus();
     	for (var i = 0; i < particleLEDInfo.leds.length; i++) {
     		var led = d3.select("#led_"+ i);
 			var fillR = particleLEDInfo.leds[i].r.toString(16);
@@ -107,4 +116,17 @@ function refreshFromDevice(){
     		led.attr("fill", "#" + fillR + fillG + fillB);
     	} 
     });
+}
+
+function changeStatus(kind, statusCode, statusMessage){
+	var container = $('.status-container');
+	if (kind === undefined){
+		container.empty();
+	}
+	else{
+		var alertText = statusCode + ": " + statusMessage;
+		container.append("<div class=\"alert alert-danger\" role=\"alert\">" + alertText + "</div>");	
+	}
+
+	
 }

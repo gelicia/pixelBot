@@ -25,4 +25,4 @@ It has several exposed functions and variables
 - `POST setPixel` takes x,y,red,blue,green and lights up that LED with that color
 - `POST setAll` takes red,blue,green and lights up all LEDs with that color
 - `GET ledDims` returns the height and width separated by a comma. I don't JSON this because it's two numbers.
-- `GET ledInfo` returns led rgb info by index. It's an array of arrays with 3 values, signifying the r, g, b value of the led by index.
+- `GET ledInfo` returns led rgb info by index. It's an array of arrays with 3 values, signifying the r, g, b value of the led by index. This should return the most condensed form that JSON.parse() can understand. This will break if you have too many LEDs - maximum string length allowed out is 622 bytes.

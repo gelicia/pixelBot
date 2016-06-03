@@ -23,46 +23,47 @@ app.post('/setPixel', urlencodedParser, function (req, res) {
 	rest.post('https://api.particle.io/v1/devices/' + particleInfo.deviceID + '/setPixel', {
 			data: { 'access_token': particleInfo.accessToken,
 			'args': argString}
-	}).on('complete', function(data, response) {
-		res.send(data);
+	}).on('success', function(data, response) {
+		res.send(data).end();
+	}).on('fail', function(data, response){
+		res.status(response.statusCode).send(data).end();
 	});
 });
 
 app.get('/getLEDArrDimensions', function (req, res) {
 	rest.get('https://api.particle.io/v1/devices/' + particleInfo.deviceID + '/ledDim?access_token=' + particleInfo.accessToken)
-	.on('complete', function(data, response) {
+	.on('success', function(data, response) {
 		if (data.result){
 			var commaIdx = data.result.indexOf(",");
 			var output = {};
 			output.height = data.result.substring(0, commaIdx);
 			output.width = data.result.substring(commaIdx+1);
-			res.send(output);
+			res.send(output).end();
 		}
 		else{
-			res.send(data);
+			res.send(data).end();
 		}
-		
-		//todo other particle errors?? 
-		
 	})
 	.on('fail', function(data, response){
-		res.send(data);
+		res.status(response.statusCode).send(data).end();
 	});
 });
 
 app.get('/getLEDPixels', function (req, res) {
 	rest.get('https://api.particle.io/v1/devices/' + particleInfo.deviceID + '/ledArr?access_token=' + particleInfo.accessToken)
-	.on('complete', function(data, response) {
-		var arrResult = JSON.parse(data.result);
-		var output = {};
-		output.leds = [];
-		for (var i = 0; i < arrResult.length; i++) {
-			output.leds[i] = {};
-			output.leds[i].r = arrResult[i][0];
-			output.leds[i].g = arrResult[i][1];
-			output.leds[i].b = arrResult[i][2];
-		}
-		res.send(output);
+	.on('success', function(data, response) {
+			var arrResult = JSON.parse(data.result);
+			var output = {};
+			output.leds = [];
+			for (var i = 0; i < arrResult.length; i++) {
+				output.leds[i] = {};
+				output.leds[i].r = arrResult[i][0];
+				output.leds[i].g = arrResult[i][1];
+				output.leds[i].b = arrResult[i][2];
+			}
+			res.send(output).end();
+	}).on('fail', function(data, response){
+		res.status(response.statusCode).send(data).end();
 	});
 });
 
