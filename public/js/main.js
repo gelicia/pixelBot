@@ -57,6 +57,8 @@ function init(){
 	       		color.r = parseInt(color.hex.substring(1,3), 16);
 	       		color.g = parseInt(color.hex.substring(3,5), 16);
 	       		color.b = parseInt(color.hex.substring(5,7), 16);
+				
+				led.attr("fill", "#666666");
 
 				$.ajax({
 					method: 'POST',
@@ -120,13 +122,11 @@ function refreshFromDevice(){
 
 function changeStatus(kind, statusCode, statusMessage){
 	var container = $('.status-container');
-	if (kind === undefined){
-		container.empty();
-	}
-	else{
+
+	container.empty();
+
+	if (kind !== undefined) {
 		var alertText = statusCode + ": " + statusMessage;
 		container.append("<div class=\"alert alert-danger\" role=\"alert\">" + alertText + "</div>");	
 	}
-
-	
 }
